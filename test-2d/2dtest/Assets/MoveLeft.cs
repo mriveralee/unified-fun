@@ -8,7 +8,6 @@ public class MoveLeft : MonoBehaviour {
 	private bool mIsMoving;
 	private GameObject[] scene;
 	private GameObject mBackground;
-	private
 
 
 	// Use this for initialization
