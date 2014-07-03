@@ -1,8 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Dolby.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Jump.cs">
     <Files>
-      <File FileName="Assets/Dolby.cs" Line="37" Column="1" />
+      <File FileName="Assets/Jump.cs" Line="21" Column="33" />
+      <File FileName="Assets/Standard Assets (Mobile)/Scripts/SidescrollControl.js" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
