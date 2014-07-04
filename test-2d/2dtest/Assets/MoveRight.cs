@@ -1,21 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveLeft : MonoBehaviour {
-
-
+public class MoveRight : MonoBehaviour {
+	public AudioClip mCompleteSound;
 	public Vector3 mMoveSpeed;
-	private bool mIsMoving;
+
+	private bool mIsMoving = false;
 	private GameObject[] mScene;
 	private GameObject mBackground;
 
+	private GameObject[] mButtons;
+	private GameObject mCompleteText;
 
+	private bool mHasEnded = false;
+	public Font mGoodDog;
+
+	
+	
 	// Use this for initialization
 	void Start () {
 		mIsMoving = false;
-		mMoveSpeed = new Vector3(-0.1f, 0f, 0f);
+		mHasEnded = false;
+		mMoveSpeed = new Vector3(0.1f, 0f, 0f);
 		mScene = GameObject.FindGameObjectsWithTag("Moveable");
 		mBackground = GameObject.Find("Background");
+		mButtons = GameObject.FindGameObjectsWithTag("Buttons");
 	}
 	
 	// Update is called once per frame
@@ -42,17 +51,24 @@ public class MoveLeft : MonoBehaviour {
 		}
 		// Check the touch 
 		if (hasTouch) CheckTouch(touchPos, touchPhase);
-
-		if (mIsMoving && mBackground.transform.position.x < 4.82f) {
+		
+		if (mIsMoving && mBackground.transform.position.x > -4.8f) {
 			for (int i = 0; i < mScene.Length; i++) {
 				GameObject s = mScene[i];
 				if (s == null) continue;
 				s.transform.position += mMoveSpeed;
+				if (s.transform.position.x < -6.6f) 
+					s.transform.position.Set(-6.6f, s.transform.position.y, s.transform.position.z);
 			}
+		}
+
+		// Level Completed
+		if (mBackground.transform.position.x <= -4.8f && !mHasEnded) {
+			Alert("complete");
 		}
 		
 	}
-
+	
 	/* Check the current touch coordinate on the screen
 	 * @param pos - the position touched
 	 * @param phase - the phase of 
@@ -71,9 +87,46 @@ public class MoveLeft : MonoBehaviour {
 			return;
 		}
 
-		if (hitPt.gameObject.name == "LeftDirectionButton") {
+		if (hitPt.gameObject.name == "RightDirectionButton") {
 			if (phase == TouchPhase.Began) mIsMoving = true;
 			else if (phase == TouchPhase.Ended) mIsMoving = false;
 		}
+	}
+
+	/*
+	 * Restart the Game 
+	 */
+	void Restart () {
+		Application.LoadLevel(Application.loadedLevel);
+	}
+
+	/*
+	 * Alert game completed
+	 */
+	public void Alert (string action) {
+		mHasEnded = true;
+
+		mCompleteText = new GameObject();
+		mCompleteText.AddComponent("GUIText");
+		mCompleteText.guiText.font = mGoodDog;
+		mCompleteText.guiText.fontSize = 50;
+		mCompleteText.guiText.color = new Color(255, 0, 0);
+
+		if (action == "complete") {
+			AudioSource.PlayClipAtPoint(mCompleteSound, transform.position);
+			mCompleteText.guiText.text = "Level Complete!";
+			mCompleteText.guiText.transform.position = new Vector3(0.24f, 0.88f, 0);
+		} else {
+			mCompleteText.guiText.text = "Game Over!";
+			mCompleteText.guiText.transform.position = new Vector3(0.36f, 0.88f, 0);
+		}
+
+		//mBackground.sStop();
+
+		for (int i = 0; i < mButtons.Length; i++) {
+			mButtons[i].renderer.enabled = false;
+			Invoke("Restart", 2);
+		}
+	
 	}
 }
